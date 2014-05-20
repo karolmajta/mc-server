@@ -23,6 +23,8 @@ def tasks(ws):
         msg = ws.receive()
         if msg:
              data = json.loads(msg)
+             if 'task' not in data or 'result' not in data or 'error' not in data:
+                 continue  # consider all invalid messages as heartbeats
              task = data['task']
              result = {"result": data['result'], "error": data['error']}
              results[task] = result
