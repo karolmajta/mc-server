@@ -23,11 +23,10 @@ def tasks(ws):
         msg = ws.receive()
         if msg:
              data = json.loads(msg)
-             if 'task' not in data or 'result' not in data or 'error' not in data:
+             if 'task' not in data:
                  continue  # consider all invalid messages as heartbeats
              task = data['task']
-             result = {"result": data['result'], "error": data['error']}
-             results[task] = result
+             results[task] = data
              active_workers.discard(ws)
              idle_workers.add(ws)
         else:
