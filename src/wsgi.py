@@ -4,7 +4,10 @@ monkey.patch_all()
 import time, random, uuid, json
 from flask import Flask, request, jsonify
 from flask_sockets import Sockets
+from flask_cors import cross_origin
 
+
+ALLOWED_CORS_HEADERS = ['Content-Type', 'Authorization']
 
 app = Flask(__name__)
 app.debug = False
@@ -36,6 +39,7 @@ def tasks(ws):
     active_workers.discard(ws)
 
 @app.route('/schedule/', methods=['POST'])
+@cross_origin(headers=ALLOWED_CORS_HEADERS)
 def schedule():
     code = request.json['code']
     inputs = request.json['inputs']
@@ -51,6 +55,7 @@ def schedule():
         return "", 503
 
 @app.route('/results/<task>', methods=['GET'])
+@cross_origin(headers=ALLOWED_CORS_HEADERS)
 def result(task):
     if task not in results:
         return "", 404
@@ -63,6 +68,7 @@ def result(task):
             return "", 410
 
 @app.route('/status', methods=['GET'])
+@cross_origin(headers=ALLOWED_CORS_HEADERS)
 def status():
     return jsonify({
         "idle": len(idle_workers),
