@@ -62,6 +62,13 @@ def result(task):
         else:
             return "", 410
 
+@app.route('/status', methods=['GET'])
+def status():
+    return jsonify({
+        "idle": len(idle_workers),
+        "busy": len(active_workers)
+    }), 200
+
 def get_worker(idle, active):
     l_idle = list(idle)
     task_uuid = uuid.uuid4()
